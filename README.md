@@ -36,3 +36,9 @@ Grzegorz
 Maciej
 Dariusz
 ```
+## Złożoność algorytmiczna
+### Klasa HashTable
+| Metoda              | hashFunction(string s) | insert(const string& s, string key) | search(const string& s) | Ogólnie           |
+|---------------------|------------------------|-------------------------------------|-------------------------|-------------------|
+| Złożoność O czasowa | długość S              | długość S+kolizje                   | długość S+kolizje       | nie obowiązuje    |
+| Złożoność miejscowa | 1                      | 1                                   | 1                       | Rozmiar tablicy N |

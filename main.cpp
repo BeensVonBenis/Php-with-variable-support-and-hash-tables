@@ -7,18 +7,42 @@
 #include "hashTable.h"
 using namespace std;
 
-bool debug = true;
+bool debug = false;
 
-class PHPizer{
-    PHPizer(string fileContent)
-    {
-
-    }
-};
+// class PHPizer
+// {
+//     static string cleanFragment(const string& fragment) {
+//         string cleaned;
+//         for (char c : fragment) {
+//             if (c != ';' && c != '\n' && c != '\r' && c != ' ') {
+//                 cleaned += c;
+//             }
+//         }
+//         return cleaned;
+//     }
+//
+//     static string extractValue(const string& fragment, size_t startPos) {
+//         if (startPos >= fragment.size()) return "";
+//
+//         string value;
+//         if (fragment[startPos] == '"') {
+//             size_t endQuote = fragment.find('"', startPos + 1);
+//             if (endQuote != string::npos) {
+//                 value = fragment.substr(startPos + 1, endQuote - startPos - 1);
+//             }
+//         } else {
+//             value = fragment.substr(startPos);
+//         }
+//         return value;
+//     }
+//
+//     static int findChar(const string& str, char c) {
+//         return str.find(c);
+//     }
+//
+// };
 
 int main() {
-    const char* filters[] = { "*.txt", "*.php"};
-
     std::cout << "TinyFD version: " << tinyfd_version << std::endl;
 
     const char* filePath = tinyfd_openFileDialog(
@@ -56,8 +80,6 @@ int main() {
 
     HashTable tableNames;
     vector<HashTable> tables;
-
-    tableNames.insert("testus", "skibidi");
 
     for (string fragment:codeFrags) {
         int operation;
@@ -117,7 +139,7 @@ int main() {
             string variableName=fragment.substr(1, variableNameEnd-2);
             string variableValue;
 
-            if (fragment[variableNameEnd]==34) {
+            if (fragment[variableNameEnd]==string::npos) {
                 variableValue=fragment.substr(variableNameEnd+1, fragment.size()-2-variableNameEnd);
             }else {
                 variableValue=fragment.substr(variableNameEnd);
@@ -232,7 +254,7 @@ int main() {
                 }
             }
             string keyName=fragment.substr(variableNameEnd+2, fragment.size()-keyNameEnd-2);
-            if ((int)keyName[keyName.length()-1]==34)
+            if ((int)keyName[keyName.length()-1]==string::npos)
             {
                 keyName=keyName.substr(0, keyName.length()-4);
             }
@@ -242,7 +264,7 @@ int main() {
             }
             string value=fragment.substr(keyNameEnd+3, fragment.size()-keyNameEnd-4);
             int arrayIndex=stoi( tableNames.search(variableName));
-            {
+            if (debug){
                 cout << "Variable: " << variableName << "Key: " << keyName <<  endl;
             }
             tables.at(arrayIndex-1).insert(keyName, value);

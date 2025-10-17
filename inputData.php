@@ -2,6 +2,9 @@
 $liczba=10;
 echo $liczba;
 
+$liczba=15;
+echo $liczba;
+
 $nauczyciele=[
     "Szalkowski"=>"Maciej",
     "Kowalski"=>"Maciej",

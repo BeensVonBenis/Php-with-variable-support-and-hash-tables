@@ -4,6 +4,7 @@
 #include <sstream>
 #include <filesystem>
 #include <vector>
+#include "tinyfiledialogs.h"
 using namespace std;
 
 class HashTable {
@@ -44,8 +45,22 @@ public:
 };
 
 int main() {
+    const char* filters[] = { "*.txt", "*.php"};
+
+    const char* filePath = tinyfd_openFileDialog(
+        "Select a file",
+        "",
+        3, filters,
+        "Text and C++ Files",
+        0
+    );
+
+    if (!filePath)
+    {
+        return 0;
+    }
     vector <string> codeFrags;
-    ifstream phpStream(R"(C:\Users\kowal\CLionProjects\untitled1\inputData.php)");
+    ifstream phpStream(filePath);
 
     stringstream buffer;
     buffer << phpStream.rdbuf();

@@ -1,64 +1,38 @@
 #include <iostream>
-#include <istream>
 #include <fstream>
 #include <sstream>
 #include <filesystem>
 #include <vector>
 #include "tinyfiledialogs.h"
+#include "hashTable.h"
 using namespace std;
 
-class HashTable {
-    static const int SIZE=8;
-    vector<vector<pair<string, string>>> table;
-    int hashFunction(string s) {
-        int hash=0;
-        for (char c:s) {
-            hash=(hash+c)%SIZE;
-        }
-        return hash;
-    }
-public:
-    HashTable() : table(SIZE) {
+bool debug = true;
 
-    }
+class PHPizer{
+    PHPizer(string fileContent)
+    {
 
-    void insert(const string& s, string key) {
-        int idx = hashFunction(s);
-        for (auto& p : table[idx]) {
-            if (p.first == s) {
-                p.second = key;
-                return;
-            }
-        }
-        table[idx].emplace_back(s, key);
-    }
-
-    string search(const string& s) {
-        int idx = hashFunction(s);
-        for (auto&p : table[idx]) {
-            if (p.first == s) {
-                return p.second;
-            }
-        }
-        return "";
     }
 };
 
 int main() {
     const char* filters[] = { "*.txt", "*.php"};
 
+    std::cout << "TinyFD version: " << tinyfd_version << std::endl;
+
     const char* filePath = tinyfd_openFileDialog(
         "Select a file",
         "",
-        3, filters,
-        "Text and C++ Files",
+        0, nullptr,
+        nullptr,
         0
     );
 
     if (!filePath)
-    {
-        return 0;
-    }
+        std::cout << "Dialog canceled or failed." << std::endl;
+    else
+        std::cout << "Selected: " << filePath << std::endl;
     vector <string> codeFrags;
     ifstream phpStream(filePath);
 
@@ -106,7 +80,7 @@ int main() {
                 foundBracket=true;
             }
             if (c=='=') {
-                if (fragment[fragIndex+1]=='>') {
+                if (fragIndex + 1 < fragment.size() && fragment[fragIndex + 1] == '>') {
                     foundArrow=true;
                 }else {
                     foundExuals=true;
@@ -148,7 +122,9 @@ int main() {
             }else {
                 variableValue=fragment.substr(variableNameEnd);
             }
-
+            if (debug){
+                cout << "Variable: " << variableName << "Value: " << variableValue <<  endl;
+            }
             tableNames.insert(variableName, variableValue);
         }
 
@@ -191,6 +167,9 @@ int main() {
             tables.push_back(thisTable);
             stringstream ss;
             ss << tables.size();
+            if (debug){
+                cout << "Variable: " << variableName <<  endl;
+            }
             tableNames.insert(variableName, ss.str() );
         }
 
@@ -214,6 +193,12 @@ int main() {
             }
             string variableName=fragment.substr(variableNameStart, variableNameEnd-variableNameStart);
             string keyName=fragment.substr(variableNameEnd+2, fragment.size()-variableNameEnd-4);
+            if (debug)
+            {
+                cout << "Variable: " << variableName << "Key: " << keyName <<  endl;
+                cout << "Indeks: " << tableNames.search(variableName) << endl;
+            }
+
             int arrayIndex=stoi( tableNames.search(variableName));
             cout << tables.at(arrayIndex-1).search(keyName) << endl;
         }
@@ -256,12 +241,13 @@ int main() {
                 keyName=keyName.substr(0, keyName.length()-3);
             }
             string value=fragment.substr(keyNameEnd+3, fragment.size()-keyNameEnd-4);
-
             int arrayIndex=stoi( tableNames.search(variableName));
-
+            {
+                cout << "Variable: " << variableName << "Key: " << keyName <<  endl;
+            }
             tables.at(arrayIndex-1).insert(keyName, value);
         }
     }
-    int index = stoi( tableNames.search("arr"));
+
     return 0;
 }

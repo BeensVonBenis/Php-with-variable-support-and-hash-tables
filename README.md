@@ -4,7 +4,8 @@ Uznałem, że skoro mam zaimplementować hash table w c++ to zrobię coś podobn
 ## Co robi?
 Można przypisywać wartości do zmiennich, tablic i je nadpisywać jak w pliku inputData.php.
 ## Jak odpalić?
-Muszę się przyznać, że program kompiluje za mnie IDE, więc dobrym pomysłem jest uruchamianie go w IDE.
+Skompilować przy użyciu cmake, w folderze dobug albo zgodnie z konfiguracją storzy się binarka w .exe.
+Przy uruchomieniu użytkownik zostanie poproszony o wybranie pliku z użyciem natywnego menu.
 ## Przykładowe dane wejściowe
 ```
 <?php;
